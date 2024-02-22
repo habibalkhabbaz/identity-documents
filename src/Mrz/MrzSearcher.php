@@ -41,7 +41,7 @@ class MrzSearcher extends Mrz
             return false;
         }
         if (! is_numeric($characters[$checkDigitPosition])) {
-            return $characters[$checkDigitPosition] === 'O';
+            return $characters[$checkDigitPosition] === 'O' || $characters[$checkDigitPosition] === '<';
         }
 
         return true;
@@ -116,7 +116,7 @@ class MrzSearcher extends Mrz
     {
         foreach ($mrzKeys as $key => $positions) {
             $position = $this->testKeyTemplates($key, $positions, $characters);
-            if ($position) {
+            if ($position !== null) {
                 return $position;
             }
         }

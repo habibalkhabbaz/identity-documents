@@ -37,6 +37,7 @@ class IdentityImage
         if (! $class->implementsInterface(Ocr::class)) {
             throw CouldNotSetService::couldNotDetectInterface(Ocr::class, $service);
         }
+
         $this->ocrService = $service;
     }
 
@@ -46,6 +47,7 @@ class IdentityImage
         if (! $class->implementsInterface(FaceDetection::class)) {
             throw CouldNotSetService::couldNotDetectInterface(FaceDetection::class, $service);
         }
+
         $this->faceDetectionService = $service;
     }
 
@@ -61,6 +63,7 @@ class IdentityImage
 
     public function ocr(): string
     {
+        /** @var Ocr $service */
         $service = new $this->ocrService();
 
         return $this->text = $service->ocr($this->image)->text;
@@ -68,6 +71,7 @@ class IdentityImage
 
     public function face(): ?Image
     {
+        /** @var FaceDetection $service */
         $service = new $this->faceDetectionService();
 
         return $this->face = $service->detect($this);

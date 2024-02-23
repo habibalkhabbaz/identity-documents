@@ -4,7 +4,7 @@ namespace HabibAlkhabbaz\IdentityDocuments\Mrz;
 
 class MrzParser extends Mrz
 {
-    public function parse($mrz, $type)
+    public function parse($mrz, $type): array
     {
         $parsed = [];
 

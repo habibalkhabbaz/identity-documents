@@ -18,9 +18,7 @@ class Google implements FaceDetection, Ocr
     public function __construct()
     {
         $this->credentials = config('google_key');
-        $this->annotator = new ImageAnnotatorClient(
-            ['credentials' => $this->credentials]
-        );
+        $this->annotator = new ImageAnnotatorClient(['credentials' => $this->credentials]);
     }
 
     public function ocr(Image $image): OcrResponse
@@ -34,18 +32,22 @@ class Google implements FaceDetection, Ocr
     public function detect(IdentityImage $image): ?Image
     {
         $response = $this->annotator->faceDetection((string) $image->image->encode());
+
         $largest = 0;
         $largestFace = null;
-        foreach ($response->getFaceAnnotations() as $key => $face) {
+
+        foreach ($response->getFaceAnnotations() as $face) {
             $dimensions = $this->getFaceDimensions($face);
             if ($largest < $dimensions['width'] + $dimensions['height']) {
                 $largest = $dimensions['width'] + $dimensions['height'];
                 $largestFace = $dimensions;
             }
         }
+
         if (! $largestFace) {
             return null;
         }
+
         $face = $image->image;
         $face->resizeCanvas($largestFace['centerX'] * 2, $largestFace['centerY'] * 2, 'top-left');
         $face->rotate($largestFace['roll']);
@@ -54,7 +56,7 @@ class Google implements FaceDetection, Ocr
         return $face;
     }
 
-    private function getFaceDimensions($face)
+    private function getFaceDimensions($face): array
     {
         $rectangle = [];
         $roll = $face->getRollAngle();

@@ -13,18 +13,19 @@ class IdentityDocument
 {
     public string $mrz;
 
+    public array $viz;
+
     public string $type;
 
     public ?Image $face;
 
     public array $parsedMrz;
 
-    private IdentityImage $frontImage;
+    private ?IdentityImage $frontImage;
 
-    private IdentityImage $backImage;
+    private ?IdentityImage $backImage;
 
-    private IdentityImage $mergedImage;
-
+    /** @var array<IdentityImage> */
     private array $images;
 
     private VizParser $resolver;
@@ -47,6 +48,7 @@ class IdentityDocument
         if ($frontImage) {
             $this->addFrontImage($frontImage);
         }
+
         if ($backImage) {
             $this->addBackImage($backImage);
         }
@@ -56,24 +58,25 @@ class IdentityDocument
         $this->resolver = new VizParser();
     }
 
-    public static function all($frontImage = null, $backImage = null)
+    public static function all($frontImage = null, $backImage = null): array
     {
         $id = new IdentityDocument($frontImage, $backImage);
+
         if (config('identity_documents.merge_images')) {
             $id->mergeBackAndFrontImages();
         }
+
         $mrz = $id->getMrz();
         $parsed = $id->getParsedMrz();
         $face = $id->getFace();
+
         $faceB64 = ($face) ?
             'data:image/jpg;base64,'.
             base64_encode(
                 $face
-                    ->resize(null, 200, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })
+                    ->resize(null, 200, fn ($constraint) => $constraint->aspectRatio())
                     ->encode()
-                ->encoded
+                    ->encoded
             ) :
             null;
         $viz = $id->getViz();
@@ -111,6 +114,7 @@ class IdentityDocument
     public function setOcrService(string $service)
     {
         $this->ocrService = $service;
+
         foreach ($this->images as $image) {
             $image->setOcrService($service);
         }
@@ -124,15 +128,17 @@ class IdentityDocument
         }
     }
 
-    public function mergeBackAndFrontImages()
+    public function mergeBackAndFrontImages(): bool
     {
         if (! $this->frontImage || ! $this->backImage) {
             return false;
         }
-        if (! $this->mergedImage = $this->frontImage->merge($this->backImage)) {
+
+        if (! $mergedImage = $this->frontImage->merge($this->backImage)) {
             return false;
         }
-        $this->images = [&$this->mergedImage];
+
+        $this->images = [&$mergedImage];
 
         return true;
     }
@@ -140,18 +146,20 @@ class IdentityDocument
     private function mrz(): string
     {
         $this->mrz = '';
+
         foreach ($this->images as $image) {
             $this->text .= $image->ocr();
             if ($mrz = $this->searcher->search($image->text)) {
-                $this->mrz = $mrz ?? '';
+                $this->mrz = $mrz;
             }
         }
+
         $this->type = $this->searcher->type;
 
         return $this->mrz;
     }
 
-    private function viz()
+    private function viz(): ?array
     {
         if (! $this->text) {
             return null;
@@ -163,7 +171,7 @@ class IdentityDocument
     public function getViz(): array
     {
         if (! isset($this->viz)) {
-            $this->viz();
+            return $this->viz();
         }
 
         return $this->viz;
@@ -172,7 +180,7 @@ class IdentityDocument
     public function getMrz(): string
     {
         if (! isset($this->mrz)) {
-            $this->mrz();
+            return $this->mrz();
         }
 
         return $this->mrz;
@@ -181,7 +189,7 @@ class IdentityDocument
     public function getFace(): ?Image
     {
         if (! isset($this->face) || ! $this->face) {
-            $this->face();
+            return $this->face();
         }
 
         return $this->face;
@@ -190,9 +198,10 @@ class IdentityDocument
     private function face(): ?Image
     {
         $this->face = null;
+
         foreach ($this->images as $image) {
             if ($face = $image->face()) {
-                $this->face = $face ?? null;
+                $this->face = $face;
                 break;
             }
         }
@@ -203,10 +212,10 @@ class IdentityDocument
     public function getParsedMrz(): array
     {
         if (! isset($this->parsedMrz) || ! $this->mrz) {
-            $this->parseMrz();
+            return $this->parseMrz();
         }
 
-        return $this->parsedMrz ?? [];
+        return $this->parsedMrz;
     }
 
     public function setMrz($mrz): IdentityDocument
@@ -216,8 +225,8 @@ class IdentityDocument
         return $this;
     }
 
-    private function parseMrz(): void
+    private function parseMrz(): array
     {
-        $this->parsedMrz = $this->parser->parse($this->getMrz(), $this->type);
+        return $this->parsedMrz = $this->parser->parse($this->getMrz(), $this->type);
     }
 }

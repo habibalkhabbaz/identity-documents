@@ -15,19 +15,24 @@ class VizParser extends Viz
         if (! $mrz) {
             return [];
         }
+
         $ignore = "\n*\s*";
         $mrzCharacters = str_split($mrz);
+
         foreach ($mrzCharacters as $key => $character) {
             $mrzCharacters[$key] = $character.$ignore;
         }
+
         $mrzRegex = implode($mrzCharacters);
         $text = preg_replace("/$mrzRegex/", '', $text);
         $text = preg_replace("/\n/", ' ', $text);
         $words = explode(' ', $text);
         $lastNameScore = 0.4;
         $firstNameScore = [];
+
         foreach ($words as $wordKey => $word) {
             $lastName = $word;
+
             if (substr_count($parsed['last_name'], '<')) {
                 $fillerAmount = range(0, substr_count($parsed['last_name'], '<'));
                 $lastName = [];
@@ -43,28 +48,33 @@ class VizParser extends Viz
                 }
                 $lastName = implode('<', $lastName);
             }
+
             if ($this->compare($parsed['last_name'], $lastName) > $lastNameScore) {
                 $this->viz['last_name']['value'] = preg_replace('/</', ' ', $lastName);
                 $lastNameScore = $this->compare($parsed['last_name'], $lastName);
                 $this->viz['last_name']['confidence'] = $lastNameScore;
             }
+
             if (strpos($word, preg_replace('/</', '', $parsed['document_number'])) !== false) {
                 $this->viz['document_number']['value'] = $word;
             }
-            foreach ($parsed['first_name'] as $key => $first_name) {
+
+            foreach ($parsed['first_name'] as $key => $firstName) {
                 if (! isset($firstNameScore[$key])) {
                     $firstNameScore[$key] = 0.4;
                 }
+
                 if ($this->compare($parsed['first_name'][$key], $word) > $firstNameScore[$key]) {
                     $firstNameScore[$key] = $this->compare($parsed['first_name'][$key], $word);
-                    $first_name = [
+                    $firstName = [
                         'value' => $word,
                         'confidence' => $firstNameScore[$key],
                     ];
-                    $this->viz['first_name'][$key] = $first_name;
+                    $this->viz['first_name'][$key] = $firstName;
                 }
             }
         }
+
         ksort($this->viz['first_name']);
         $this->viz['first_name'] = array_values($this->viz['first_name']);
 

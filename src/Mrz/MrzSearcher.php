@@ -16,9 +16,7 @@ class MrzSearcher extends Mrz
             return null;
         }
 
-        $mrz = $this->getMrz($strippedString, $startPosition);
-
-        return $mrz;
+        return $this->getMrz($strippedString, $startPosition);
     }
 
     private function getMrz($strippedString, $startPosition)
@@ -26,8 +24,10 @@ class MrzSearcher extends Mrz
         return substr($strippedString, $startPosition, $this->{$this->type}['length']);
     }
 
-    private function findKeysInCharacters(array $keys, array $characters, $positions = []): array
+    private function findKeysInCharacters(array $keys, array $characters): array
     {
+        $positions = [];
+
         foreach ($keys as $key => $value) {
             $positions[$key] = array_keys($characters, $key, true);
         }
@@ -35,27 +35,18 @@ class MrzSearcher extends Mrz
         return $positions;
     }
 
-    private function canBeCheckDigit(array $characters, int $checkDigitPosition): bool
-    {
-        if (! isset($characters[$checkDigitPosition])) {
-            return false;
-        }
-        if (! is_numeric($characters[$checkDigitPosition])) {
-            return $characters[$checkDigitPosition] === 'O' || $characters[$checkDigitPosition] === '<';
-        }
-
-        return true;
-    }
-
     private function buildCheckString(array $checkOver, int $position, array $characters, bool $convert = false): string
     {
         $checkStringArray = [];
+
         foreach ($checkOver as $check) {
             $start = $position + $check[0];
             $end = $start + $check[1] - 1;
             $checkStringArray = array_merge($checkStringArray, range($start, $end));
         }
+
         $checkString = '';
+
         foreach ($checkStringArray as $character) {
             $checkString .= ($characters[$character] === 'O' && $convert) ? '0' : $characters[$character];
         }
@@ -63,12 +54,12 @@ class MrzSearcher extends Mrz
         return $checkString;
     }
 
-    private function checkPositionInFormat(int $position, array $characters, array $checkDigits)
+    private function checkPositionInFormat(int $position, array $characters, array $checkDigits): bool
     {
         foreach ($checkDigits as $checkDigitIndex => $checkOver) {
             $checkDigitPosition = $position + $checkDigitIndex;
 
-            if (! $this->canBeCheckDigit($characters, $checkDigitPosition)) {
+            if (! isset($characters[$checkDigitPosition])) {
                 return false;
             }
 

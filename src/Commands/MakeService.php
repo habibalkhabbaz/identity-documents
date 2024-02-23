@@ -28,7 +28,7 @@ class MakeService extends GeneratorCommand
      */
     protected $type = 'ID Service';
 
-    protected $stubName;
+    protected string $stubName;
 
     /**
      * Get the stub file for the generator.
@@ -43,22 +43,24 @@ class MakeService extends GeneratorCommand
     public function handle()
     {
         $type = strtolower($this->argument('type'));
+
         switch ($type) {
             case 'ocr':
                 $this->stubName = 'OcrServiceStub.php';
                 break;
-            case 'facedetection':
+            case 'face-detection':
             case 'fd':
                 $this->stubName = 'FaceDetectionServiceStub.php';
                 break;
             case 'both':
-                $this->stubName = 'OcrFdServiceStub.php';
+                $this->stubName = 'OcrFaceDetectionServiceStub.php';
                 break;
             default:
                 $this->error('Service Type not recognized, try using "Ocr", "FaceDetection" or "Both"');
 
                 return false;
         }
+
         // First we need to ensure that the given name is not a reserved word within the PHP
         // language and that the class name will actually be valid. If it is not valid we
         // can error now and prevent from polluting the filesystem using invalid files.
@@ -76,8 +78,8 @@ class MakeService extends GeneratorCommand
         // to create the class and overwrite the user's code. So, we will bail out so the
         // code is untouched. Otherwise, we will continue generating this class' files.
         if ((! $this->hasOption('force') ||
-             ! $this->option('force')) &&
-             $this->alreadyExists($this->getNameInput())) {
+                ! $this->option('force')) &&
+            $this->alreadyExists($this->getNameInput())) {
             $this->error($this->type.' already exists!');
 
             return false;
@@ -97,23 +99,20 @@ class MakeService extends GeneratorCommand
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
-     * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'/Services';
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the service'],
-            ['type', InputArgument::REQUIRED, 'The type of the service, OCR - FaceDetection (fd) or Both'],
+            ['type', InputArgument::REQUIRED, 'The type of the service, ocr, face-detection (fd) or both'],
         ];
     }
 }

@@ -2,7 +2,8 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
-use Tests\TestCase;
+
+use HabibAlkhabbaz\IdentityDocuments\Tests\TestCase;
 use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
 
 class VizParserTest extends TestCase
@@ -32,16 +33,23 @@ class VizParserTest extends TestCase
     ];
     private array $expected = [
         'first_name' => [
-            'Willeke',
-            'Liselotte',
+            [
+                'value' => 'Willeke',
+                'confidence' => 1
+            ],
+            [
+                'value' => 'Liselotte',
+                'confidence' => 1
+            ],
         ],
-        'last_name' => 'Bruijn',
+        'last_name' => [
+            'value' => 'De Bruijn',
+            'confidence' => 1
+        ],
+        'document_number' => [
+            'value' => 'SPECI2014'
+        ]
     ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     /** @test */
     public function viz_is_parsed_correctly()

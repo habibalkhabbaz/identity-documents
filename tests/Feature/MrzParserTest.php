@@ -2,7 +2,7 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
-use Tests\TestCase;
+use HabibAlkhabbaz\IdentityDocuments\Tests\TestCase;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
 
 class MrzParserTest extends TestCase
@@ -29,11 +29,6 @@ class MrzParserTest extends TestCase
         'issuing_country_name' => 'Netherlands',
         'nationality_name' => 'Netherlands',
     ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     /** @test */
     public function correctly_parse_mrz()

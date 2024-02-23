@@ -16,7 +16,7 @@ class Mrz
 
     public function __construct()
     {
-        $this->countries = config('id_countries');
+        $this->countries = config('countries');
         $this->loadConfig();
     }
 

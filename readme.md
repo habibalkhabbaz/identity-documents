@@ -1,48 +1,30 @@
-
 # Laravel Identity Documents
-
-  
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is a fork from [365Werk/identitydocuments](https://github.com/365Werk/identitydocuments) and I am wishing to maintain it for newer versions of Laravel, because the original repository wasn't updated for a long time.
+> [!IMPORTANT]
+> This is a fork from [365Werk/identitydocuments](https://github.com/365Werk/identitydocuments), and I am wishing to maintain it and keep it up-to-date, because the original repository wasn't updated for a long time and it doesn't support Laravel >= 10
 
 Package that allows you to handle documents like passports and other documents that contain a Machine Readable Zone (MRZ).
 
 This package allows you to process images of documents to find the MRZ, parse the MRZ, parse the Visual Inspection Zone (VIZ) and also to find and return a crop of the passport picture (using face detection).
 
-> ⚠️ Version 2.x is a complete rewrite of the package with a new MRZ detection algorithm and is not compatible with version 1.x
-
-  
-  
-
 ## Installation
 
-  
-
-Via Composer
-
-  
+Using Composer
 
 ``` bash
-
 $ composer require habibalkhabbaz/identity-documents
-
 ```
-
-  
 
 Publish config (optional)
 
 ``` bash
-
 $ php artisan vendor:publish --provider="HabibAlkhabbaz\IdentityDocuments\IdentityDocumentsServiceProvider"
-
 ```
 
 ## Configuration
-
 ### Services
 
 The first important thing to know about the package is that you can use any OCR and or Face Detection API that you want. This package is not doing any of those itself.
@@ -73,7 +55,6 @@ Making a service is relatively easy, if you want to make a service that does the
 $ php artisan id:service <name> <type>
 ```
 Where `name` is the `ClassName` of the service you wish to create, and `type` is either `Ocr`, `FaceDetection` or `Both`. This will create a new (empty) service for you in your `App\Services` namespace implementing the `Ocr`, `FaceDetection` or both interfaces.
-  
 
 ## Usage
 ### Basic usage
@@ -88,7 +69,8 @@ class ExampleController {
 	}
 }
 ```
-> ⚠️ In this example I use uploaded files, but you can use any files [supported by Intervention](http://image.intervention.io/api/make)
+> [!WARNING]
+> In this example I use uploaded files, but you can use any files [supported by Intervention](http://image.intervention.io/api/make)
 
 There are now a few things we can do with this newly created Identity Document. First of all finding and returning the MRZ:
 ```php
@@ -151,7 +133,8 @@ class ExampleController {
 	}
 }
 ```
-> ⚠️ Please note that merging images might cause high memory usage, depending on the size of your images
+> [!WARNING]
+> Please note that merging images might cause high memory usage, depending on the size of your images
 
 If you wish to use the static `all()` method and merge the images, publish the package's config file and enable it in there. Note that changing the option in the config will __only__ apply to the `all()` method. Default config value:
 ```php
@@ -200,32 +183,25 @@ If you wish to use the `all()` method, publish the package's config and set the 
 ## Contributing
 
 Please see [contributing.md](contributing.md) for details and a todolist.
-  
 
 ## Credits
 
-
--  [Hergen Dillema][link-author]
-
--  [All Contributors][link-contributors]
-
-  
+- [Hergen Dillema](https://github.com/HergenD)
+- [Habib Alkhabbaz](https://github.com/habibalkhabbaz)
+- [All Contributors][link-contributors]
 
 ## License
 
 Please see the [license file](LICENSE) for more information.
 
-  
+
 
 [ico-version]: https://img.shields.io/packagist/v/habibalkhabbaz/identity-documents.svg?style=flat-square
 
 [ico-downloads]: https://img.shields.io/packagist/dt/habibalkhabbaz/identity-documents.svg?style=flat-square
-  
 
 [link-packagist]: https://packagist.org/packages/habibalkhabbaz/identity-documents
 
 [link-downloads]: https://packagist.org/packages/habibalkhabbaz/identity-documents
-
-[link-author]: https://github.com/HergenD
 
 [link-contributors]: ../../contributors

@@ -3,10 +3,10 @@
 namespace DummyNamespace;
 
 use Intervention\Image\Image;
-use Werk365\IdentityDocuments\Interfaces\OCR;
-use Werk365\IdentityDocuments\Responses\OcrResponse;
+use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
+use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
 
-class DummyClass implements OCR
+class DummyClass implements Ocr
 {
     public function ocr(Image $image): OcrResponse
     {

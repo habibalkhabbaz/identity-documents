@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Helpers;
+namespace HabibAlkhabbaz\IdentityDocuments\Helpers;
 
 class IdCheck
 {
@@ -12,7 +12,7 @@ class IdCheck
             return true;
         }
 
-        $patern = [7, 3, 1];
+        $pattern = [7, 3, 1];
         $characters = str_split($subject);
         $total = 0;
         foreach ($characters as $key => $character) {
@@ -24,12 +24,12 @@ class IdCheck
             if (is_null($value)) {
                 return false;
             }
-            $value = $value * $patern[$weight];
+            $value = $value * $pattern[$weight];
             $total += $value;
         }
         $remainder = $total % 10;
 
-        return ($remainder === $check) ? true : false;
+        return $remainder === $check;
     }
 
     private static function toInt(string $character): ?int

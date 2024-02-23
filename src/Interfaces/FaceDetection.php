@@ -1,9 +1,9 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Interfaces;
+namespace HabibAlkhabbaz\IdentityDocuments\Interfaces;
 
 use Intervention\Image\Image;
-use Werk365\IdentityDocuments\IdentityImage;
+use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
 
 interface FaceDetection
 {

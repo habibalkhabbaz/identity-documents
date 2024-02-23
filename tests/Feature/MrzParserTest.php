@@ -1,9 +1,9 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Tests\Feature;
+namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
 use Tests\TestCase;
-use Werk365\IdentityDocuments\Mrz\MrzParser;
+use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
 
 class MrzParserTest extends TestCase
 {

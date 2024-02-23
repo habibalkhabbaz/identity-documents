@@ -1,9 +1,9 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Tests\Feature;
+namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
 use Tests\TestCase;
-use Werk365\IdentityDocuments\Mrz\MrzSearcher;
+use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzSearcher;
 
 class MrzSearcherTest extends TestCase
 {

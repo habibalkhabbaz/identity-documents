@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Viz;
+namespace HabibAlkhabbaz\IdentityDocuments\Viz;
 
 class VizParser extends Viz
 {

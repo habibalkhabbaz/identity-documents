@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments;
+namespace HabibAlkhabbaz\IdentityDocuments;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +13,7 @@ class IdentityDocumentsServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $commands = [
-        'Werk365\IdentityDocuments\Commands\MakeService',
+        'HabibAlkhabbaz\IdentityDocuments\Commands\MakeService',
     ];
 
     /**
@@ -24,7 +24,7 @@ class IdentityDocumentsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/identitydocuments.php' => config_path('identitydocuments.php'),
+            __DIR__.'/../config/identity_documents.php' => config_path('identity_documents.php'),
         ]);
     }
 
@@ -33,7 +33,7 @@ class IdentityDocumentsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/identitydocuments.php', 'identitydocuments');
+        $this->mergeConfigFrom(__DIR__.'/../config/identity_documents.php', 'identity_documents');
         $this->mergeConfigFrom(__DIR__.'/../config/countries.php', 'id_countries');
         $this->commands($this->commands);
     }

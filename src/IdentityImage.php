@@ -1,14 +1,14 @@
 <?php
 
-namespace Werk365\IdentityDocuments;
+namespace HabibAlkhabbaz\IdentityDocuments;
 
 use Exception;
 use Intervention\Image\Image;
 use ReflectionClass;
-use Werk365\IdentityDocuments\Exceptions\CouldNotSetService;
-use Werk365\IdentityDocuments\Filters\MergeFilter;
-use Werk365\IdentityDocuments\Interfaces\FaceDetection;
-use Werk365\IdentityDocuments\Interfaces\OCR;
+use HabibAlkhabbaz\IdentityDocuments\Exceptions\CouldNotSetService;
+use HabibAlkhabbaz\IdentityDocuments\Filters\MergeFilter;
+use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
+use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
 
 class IdentityImage
 {
@@ -29,8 +29,8 @@ class IdentityImage
     public function setOcrService(string $service)
     {
         $class = new ReflectionClass($service);
-        if (! $class->implementsInterface(OCR::class)) {
-            throw CouldNotSetService::couldNotDetectInterface(OCR::class, $service);
+        if (! $class->implementsInterface(Ocr::class)) {
+            throw CouldNotSetService::couldNotDetectInterface(Ocr::class, $service);
         }
         $this->ocrService = $service;
     }

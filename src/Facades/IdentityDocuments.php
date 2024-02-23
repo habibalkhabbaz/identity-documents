@@ -1,7 +1,8 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Facades;
+namespace HabibAlkhabbaz\IdentityDocuments\Facades;
 
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 use Illuminate\Support\Facades\Facade;
 
 class IdentityDocuments extends Facade
@@ -13,6 +14,6 @@ class IdentityDocuments extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'identitydocuments';
+        return IdentityDocument::class;
     }
 }

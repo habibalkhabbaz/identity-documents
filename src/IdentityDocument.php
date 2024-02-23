@@ -1,13 +1,13 @@
 <?php
 
-namespace Werk365\IdentityDocuments;
+namespace HabibAlkhabbaz\IdentityDocuments;
 
 use Intervention\Image\Facades\Image as Img;
 use Intervention\Image\Image;
-use Werk365\IdentityDocuments\Mrz\MrzParser;
-use Werk365\IdentityDocuments\Mrz\MrzSearcher;
-use Werk365\IdentityDocuments\Services\Google;
-use Werk365\IdentityDocuments\Viz\VizParser;
+use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
+use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzSearcher;
+use HabibAlkhabbaz\IdentityDocuments\Services\Google;
+use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
 
 class IdentityDocument
 {
@@ -28,8 +28,8 @@ class IdentityDocument
 
     public function __construct($frontImage = null, $backImage = null)
     {
-        $this->ocrService = config('identitydocuments.ocrService') ?? Google::class;
-        $this->faceDetectionService = config('identitydocuments.faceDetectionService') ?? Google::class;
+        $this->ocrService = config('identity_documents.ocr_service') ?? Google::class;
+        $this->faceDetectionService = config('identity_documents.face_detection_service') ?? Google::class;
 
         if ($frontImage) {
             $this->addFrontImage($frontImage);
@@ -46,7 +46,7 @@ class IdentityDocument
     public static function all($frontImage = null, $backImage = null)
     {
         $id = new IdentityDocument($frontImage, $backImage);
-        if (config('identitydocuments.mergeImages')) {
+        if (config('identity_documents.merge_images')) {
             $id->mergeBackAndFrontImages();
         }
         $mrz = $id->getMrz();

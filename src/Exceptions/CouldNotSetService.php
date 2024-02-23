@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Exceptions;
+namespace HabibAlkhabbaz\IdentityDocuments\Exceptions;
 
 use Exception;
 

@@ -3,12 +3,12 @@
 namespace DummyNamespace;
 
 use Intervention\Image\Image;
-use Werk365\IdentityDocuments\IdentityImage;
-use Werk365\IdentityDocuments\Interfaces\FaceDetection;
-use Werk365\IdentityDocuments\Interfaces\OCR;
-use Werk365\IdentityDocuments\Responses\OcrResponse;
+use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
+use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
+use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
+use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
 
-class DummyClass implements OCR, FaceDetection
+class DummyClass implements Ocr, FaceDetection
 {
     public function ocr(Image $image): OcrResponse
     {

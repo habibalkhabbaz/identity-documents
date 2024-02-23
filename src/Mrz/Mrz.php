@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Mrz;
+namespace HabibAlkhabbaz\IdentityDocuments\Mrz;
 
 class Mrz
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Commands;
+namespace HabibAlkhabbaz\IdentityDocuments\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ class MakeService extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new a OCR or FD service';
+    protected $description = 'Create a new a OCR or Face Detection service';
 
     /**
      * The type of class being generated.
@@ -55,7 +55,7 @@ class MakeService extends GeneratorCommand
                 $this->stubName = 'OcrFdServiceStub.php';
                 break;
             default:
-                $this->error('Service Type not recognized, try using "OCR", "FaceDetection" or "Both"');
+                $this->error('Service Type not recognized, try using "Ocr", "FaceDetection" or "Both"');
 
                 return false;
         }

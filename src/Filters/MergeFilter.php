@@ -1,6 +1,6 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Filters;
+namespace HabibAlkhabbaz\IdentityDocuments\Filters;
 
 use Intervention\Image\Facades\Image as Img;
 use Intervention\Image\Filters\FilterInterface;

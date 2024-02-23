@@ -5,15 +5,8 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![StyleCI][ico-styleci]][link-styleci]
 
-  
-
-For general questions and suggestions join gitter:
-
-[![Join the chat at https://gitter.im/werk365/identitydocuments](https://badges.gitter.im/werk365/identitydocuments.svg)](https://gitter.im/werk365/identitydocuments?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-  
+This is a fork from [365Werk/identitydocuments](https://github.com/365Werk/identitydocuments) and I am wishing to maintain it for newer versions of Laravel, because the original repository wasn't updated for a long time.
 
 Package that allows you to handle documents like passports and other documents that contain a Machine Readable Zone (MRZ).
 
@@ -34,7 +27,7 @@ Via Composer
 
 ``` bash
 
-$ composer require werk365/identitydocuments
+$ composer require habibalkhabbaz/identity-documents
 
 ```
 
@@ -44,7 +37,7 @@ Publish config (optional)
 
 ``` bash
 
-$ php artisan vendor:publish --provider="Werk365\IdentityDocuments\IdentityDocumentsServiceProvider"
+$ php artisan vendor:publish --provider="HabibAlkhabbaz\IdentityDocuments\IdentityDocumentsServiceProvider"
 
 ```
 
@@ -60,26 +53,26 @@ Included with the package is a `Google` service class that will be loaded for bo
 
 ```php
 return [
-"type" => "service_account",
-"project_id" => "",
-"private_key_id" => "",
-"private_key" => "",
-"client_email" => "",
-"client_id" => "",
-"auth_uri" => "",
-"token_uri" => "",
-"auth_provider_x509_cert_url" => "",
-"client_x509_cert_url" => "",
+    "type" => "service_account",
+    "project_id" => "",
+    "private_key_id" => "",
+    "private_key" => "",
+    "client_email" => "",
+    "client_id" => "",
+    "auth_uri" => "",
+    "token_uri" => "",
+    "auth_provider_x509_cert_url" => "",
+    "client_x509_cert_url" => "",
 ];
 ```
 #### Creating Custom Services
 If you want to use any other API for OCR and/or Face Detection, you can make your own service, or take a look at our list of available services not included in the main package (WIP).
 
-Making a service is relatively easy, if you want to make a service that does the OCR, all you have to do is create a class that implements `Werk365\IdentityDocuments\Interfaces\OCR`. Similarly, there is also a `Werk365\IdentityDocuments\Interfaces\FaceDetection` interface. To make creating custom services even easier you can use the following command:
+Making a service is relatively easy, if you want to make a service that does the OCR, all you have to do is create a class that implements `HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr`. Similarly, there is also a `HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection` interface. To make creating custom services even easier you can use the following command:
 ```bash
 $ php artisan id:service <name> <type>
 ```
-Where `name` is the `ClassName` of the service you wish to create, and `type` is either `OCR`, `FaceDetection` or `Both`. This will create a new (empty) service for you in your `App\Services` namespace implementing the `OCR`, `FaceDetection` or both interfaces.
+Where `name` is the `ClassName` of the service you wish to create, and `type` is either `Ocr`, `FaceDetection` or `Both`. This will create a new (empty) service for you in your `App\Services` namespace implementing the `Ocr`, `FaceDetection` or both interfaces.
   
 
 ## Usage
@@ -87,7 +80,7 @@ Where `name` is the `ClassName` of the service you wish to create, and `type` is
 Create a new Identity Document with a maximum of 2 images (optional) in this example we'll use a POST request that includes 2 images on our example controller.
 ```php
 use Illuminate\Http\Request;
-use Werk365\IdentityDocuments\IdentityDocument;
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 
 class ExampleController {
 	public function id(Request $request){
@@ -123,7 +116,7 @@ This returns an `Intervention\Image\Image`
   If you wish to use all of these in a simplified way, you can also use the static `all()` method, which also expects up to two images as argument. For example:
   ```php
 use Illuminate\Http\Request;
-use Werk365\IdentityDocuments\IdentityDocument;
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 
 class ExampleController {
 	public function id(Request $request){
@@ -148,7 +141,7 @@ As you can see this includes all the above mentioned methods, plus the `$documen
 There are a couple of methods that will configure how the Identity Document is handled. First of all there's the `mergeBackAndFrontImages()` method. This method can be used to reduce the amount of OCR API calls have to be made. Images will be stacked on top of each other when this method is used. Please note that this method would have to be used __before__ the `getMrz()` method. Example:
 ```php
 use Illuminate\Http\Request;
-use Werk365\IdentityDocuments\IdentityDocument;
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 
 class ExampleController {
 	public function id(Request $request){
@@ -162,7 +155,7 @@ class ExampleController {
 
 If you wish to use the static `all()` method and merge the images, publish the package's config file and enable it in there. Note that changing the option in the config will __only__ apply to the `all()` method. Default config value:
 ```php
-	'mergeImages' => false, // bool
+	'merge_images' => false, // bool
 ```
 
 ### Setting an OCR service
@@ -170,7 +163,7 @@ If you have made a custom OCR service or are using one different than the defaul
 ```php
 use Illuminate\Http\Request;
 use App\Services\TesseractService;
-use Werk365\IdentityDocuments\IdentityDocument;
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 
 class ExampleController {
 	public function id(Request $request){
@@ -187,7 +180,7 @@ This can be done in a similar way as the OCR service, using the `setFaceDetectio
 ```php
 use Illuminate\Http\Request;
 use App\Services\AmazonFdService;
-use Werk365\IdentityDocuments\IdentityDocument;
+use HabibAlkhabbaz\IdentityDocuments\IdentityDocument;
 
 class ExampleController {
 	public function id(Request $request){
@@ -204,24 +197,9 @@ If you wish to use the `all()` method, publish the package's config and set the 
 `addFrontImage()` sets the front image of the `IdentityDocument`.
 `setMrz()` sets the `IdentityDcoument` MRZ, for if you just wish to use the parsing functionality.
 
-## More information
-If you're interested in how some things work internally, or if you would like to see an example of how to build a custom service within the package, I've written a blog post about all of that which you can find here: [hergen.nl](https://hergen.nl/processing-identity-documents-in-laravel)
-
-## Change log
-
-Please see the [changelog](changelog.md) for more information on what has changed recently.
-
-
 ## Contributing
 
 Please see [contributing.md](contributing.md) for details and a todolist.
-
-  
-
-## Security
-
-If you discover any security related issues, please email <hergen.dillema@gmail.com> instead of using the issue tracker.
-
   
 
 ## Credits
@@ -235,27 +213,18 @@ If you discover any security related issues, please email <hergen.dillema@gmail.
 
 ## License
 
-. Please see the [license file](LICENSE) for more information.
+Please see the [license file](LICENSE) for more information.
 
   
 
-[ico-version]: https://img.shields.io/packagist/v/werk365/identitydocuments.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/habibalkhabbaz/identity-documents.svg?style=flat-square
 
-[ico-downloads]: https://img.shields.io/packagist/dt/werk365/identitydocuments.svg?style=flat-square
-
-[ico-travis]: https://img.shields.io/travis/werk365/identitydocuments/master.svg?style=flat-square
-
-[ico-styleci]: https://styleci.io/repos/281089912/shield
-
+[ico-downloads]: https://img.shields.io/packagist/dt/habibalkhabbaz/identity-documents.svg?style=flat-square
   
 
-[link-packagist]: https://packagist.org/packages/werk365/identitydocuments
+[link-packagist]: https://packagist.org/packages/habibalkhabbaz/identity-documents
 
-[link-downloads]: https://packagist.org/packages/werk365/identitydocuments
-
-[link-travis]: https://travis-ci.org/werk365/identitydocuments
-
-[link-styleci]: https://styleci.io/repos/281089912
+[link-downloads]: https://packagist.org/packages/habibalkhabbaz/identity-documents
 
 [link-author]: https://github.com/HergenD
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Tests\Feature;
+namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
 use Tests\TestCase;
-use Werk365\IdentityDocuments\Viz\VizParser;
+use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
 
 class VizParserTest extends TestCase
 {

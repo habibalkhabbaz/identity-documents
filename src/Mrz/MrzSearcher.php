@@ -1,8 +1,8 @@
 <?php
 
-namespace Werk365\IdentityDocuments\Mrz;
+namespace HabibAlkhabbaz\IdentityDocuments\Mrz;
 
-use Werk365\IdentityDocuments\Helpers\IdCheck;
+use HabibAlkhabbaz\IdentityDocuments\Helpers\IdCheck;
 
 class MrzSearcher extends Mrz
 {

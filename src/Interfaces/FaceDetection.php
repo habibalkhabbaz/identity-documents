@@ -2,8 +2,8 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Interfaces;
 
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
+use Intervention\Image\Image;
 
 interface FaceDetection
 {

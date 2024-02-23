@@ -5,13 +5,21 @@ namespace HabibAlkhabbaz\IdentityDocuments\Mrz;
 class Mrz
 {
     protected array $TD1;
+
     protected array $TD2;
+
     protected array $TD3;
+
     protected array $MRVA;
+
     protected array $MRVB;
+
     protected array $keys;
+
     protected array $values;
+
     protected array $countries;
+
     public string $type = '';
 
     public function __construct()

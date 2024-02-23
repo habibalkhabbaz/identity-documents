@@ -50,7 +50,7 @@ class MakeService extends GeneratorCommand
             case 'facedetection':
             case 'fd':
                 $this->stubName = 'FaceDetectionServiceStub.php';
-            break;
+                break;
             case 'both':
                 $this->stubName = 'OcrFdServiceStub.php';
                 break;

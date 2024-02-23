@@ -3,20 +3,25 @@
 namespace HabibAlkhabbaz\IdentityDocuments;
 
 use Exception;
-use Intervention\Image\Image;
-use ReflectionClass;
 use HabibAlkhabbaz\IdentityDocuments\Exceptions\CouldNotSetService;
 use HabibAlkhabbaz\IdentityDocuments\Filters\MergeFilter;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
+use Intervention\Image\Image;
+use ReflectionClass;
 
 class IdentityImage
 {
     public Image $image;
+
     public Exception $error;
+
     public string $text;
+
     public ?Image $face;
+
     private string $ocrService;
+
     private string $faceDetectionService;
 
     public function __construct(Image $image, $ocrService, $faceDetectionService)

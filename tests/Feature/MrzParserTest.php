@@ -2,12 +2,13 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
-use HabibAlkhabbaz\IdentityDocuments\Tests\TestCase;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
+use HabibAlkhabbaz\IdentityDocuments\Tests\TestCase;
 
 class MrzParserTest extends TestCase
 {
     private string $mrz = 'P<NLDDE<BRUIJN<<WILLEKE<LISELOTTE<<<<<<<<<<<SPECI20142NLD6503101F2401151999999990<<<<<82';
+
     private array $expected = [
         'document_key' => 'P',
         'document_type' => '<',

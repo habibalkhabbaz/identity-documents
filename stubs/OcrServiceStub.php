@@ -2,9 +2,9 @@
 
 namespace DummyNamespace;
 
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
 use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
+use Intervention\Image\Image;
 
 class DummyClass implements Ocr
 {

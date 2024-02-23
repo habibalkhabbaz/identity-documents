@@ -2,14 +2,15 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Tests\Feature;
 
-
 use HabibAlkhabbaz\IdentityDocuments\Tests\TestCase;
 use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
 
 class VizParserTest extends TestCase
 {
     private string $mrz = 'P<NLDDE<BRUIJN<<WILLEKE<LISELOTTE<<<<<<<<<<<SPECI20142NLD6503101F2401151999999990<<<<<82';
+
     private string $full_text = 'PASPOORT PASSPORT PASSEPORT O KONINKRIJK DER NEDERLANDEN KINGDOM OF THE NETHERLANDS ROYAUME DES PAYSBAS P NLD Nederlandse SPECI2014 De Bruijn e/v Molenaar Willeke Liselotte 10 MAA/MAR 1965  Specimen V/F 1,75 m dm ve wwwd 15 JAN/JAN 2014 15 JAN/JAN 2024 1935 Burg. van Stad en Dorp w.L. de 3ujn P<NLDDE<BRUIJN<<WILLEKE<LISELOTTE<<<<<<<<<<< SPECI20142NLD6503101F2401151999999990<<<<<82';
+
     private array $parsed = [
         'document_key' => 'P',
         'document_type' => '<',
@@ -31,24 +32,25 @@ class VizParserTest extends TestCase
         'issuing_country_name' => 'Netherlands',
         'nationality_name' => 'Netherlands',
     ];
+
     private array $expected = [
         'first_name' => [
             [
                 'value' => 'Willeke',
-                'confidence' => 1
+                'confidence' => 1,
             ],
             [
                 'value' => 'Liselotte',
-                'confidence' => 1
+                'confidence' => 1,
             ],
         ],
         'last_name' => [
             'value' => 'De Bruijn',
-            'confidence' => 1
+            'confidence' => 1,
         ],
         'document_number' => [
-            'value' => 'SPECI2014'
-        ]
+            'value' => 'SPECI2014',
+        ],
     ];
 
     /** @test */

@@ -3,15 +3,16 @@
 namespace HabibAlkhabbaz\IdentityDocuments\Services;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
 use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
+use Intervention\Image\Image;
 
-class Google implements Ocr, FaceDetection
+class Google implements FaceDetection, Ocr
 {
     private ImageAnnotatorClient $annotator;
+
     private array $credentials;
 
     public function __construct()
@@ -37,7 +38,7 @@ class Google implements Ocr, FaceDetection
         $largestFace = null;
         foreach ($response->getFaceAnnotations() as $key => $face) {
             $dimensions = $this->getFaceDimensions($face);
-            if ($dimensions['width'] + $dimensions['height'] > $largest) {
+            if ($largest < $dimensions['width'] + $dimensions['height']) {
                 $largest = $dimensions['width'] + $dimensions['height'];
                 $largestFace = $dimensions;
             }

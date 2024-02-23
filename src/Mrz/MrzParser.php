@@ -12,7 +12,7 @@ class MrzParser extends Mrz
             return $parsed;
         }
 
-        foreach ($this->values as $name=>$value) {
+        foreach ($this->values as $name => $value) {
             if ($value[$type]) {
                 $parsed[$name] = substr($mrz, ...$value[$type]);
             } else {

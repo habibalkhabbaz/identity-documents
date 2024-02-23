@@ -2,28 +2,41 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments;
 
-use Intervention\Image\Facades\Image as Img;
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzSearcher;
 use HabibAlkhabbaz\IdentityDocuments\Services\Google;
 use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
+use Intervention\Image\Facades\Image as Img;
+use Intervention\Image\Image;
 
 class IdentityDocument
 {
     public string $mrz;
+
     public string $type;
+
     public ?Image $face;
+
     public array $parsedMrz;
+
     private IdentityImage $frontImage;
+
     private IdentityImage $backImage;
+
     private IdentityImage $mergedImage;
+
     private array $images;
+
     private VizParser $resolver;
+
     private MrzSearcher $searcher;
+
     private MrzParser $parser;
+
     private string $ocrService;
+
     private string $faceDetectionService;
+
     private string $text = '';
 
     public function __construct($frontImage = null, $backImage = null)
@@ -56,10 +69,10 @@ class IdentityDocument
             'data:image/jpg;base64,'.
             base64_encode(
                 $face
-                ->resize(null, 200, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->encode()
+                    ->resize(null, 200, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->encode()
                 ->encoded
             ) :
             null;

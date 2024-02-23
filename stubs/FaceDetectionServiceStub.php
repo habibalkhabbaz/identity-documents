@@ -2,9 +2,9 @@
 
 namespace DummyNamespace;
 
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
+use Intervention\Image\Image;
 
 class DummyClass implements FaceDetection
 {

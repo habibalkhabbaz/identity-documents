@@ -2,7 +2,7 @@
   "name": "habibalkhabbaz/identity-documents",
   "description": "Package to parse identity documents like passports",
   "license": "GPL-3.0-or-later",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Hergen Dillema",

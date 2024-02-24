@@ -2,7 +2,7 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments;
 
-use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzParser;
+use HabibAlkhabbaz\IdentityDocuments\Mrz\Contracts\MrzParser;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzSearcher;
 use HabibAlkhabbaz\IdentityDocuments\Services\Google;
 use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
@@ -15,8 +15,6 @@ class IdentityDocument
 
     public array $viz;
 
-    public string $type;
-
     public ?Image $face;
 
     public array $parsedMrz;
@@ -26,7 +24,7 @@ class IdentityDocument
     private ?IdentityImage $backImage;
 
     /** @var array<IdentityImage> */
-    private array $images;
+    private array $images = [];
 
     private VizParser $resolver;
 
@@ -54,7 +52,6 @@ class IdentityDocument
         }
 
         $this->searcher = new MrzSearcher();
-        $this->parser = new MrzParser();
         $this->resolver = new VizParser();
     }
 
@@ -82,7 +79,7 @@ class IdentityDocument
         $viz = $id->getViz();
 
         return [
-            'type' => $id->type,
+            'type' => $id->searcher->type->name,
             'mrz' => $mrz,
             'parsed' => $parsed,
             'viz' => $viz,
@@ -111,7 +108,7 @@ class IdentityDocument
         return new IdentityImage(Img::make($file), $this->ocrService, $this->faceDetectionService);
     }
 
-    public function setOcrService(string $service)
+    public function setOcrService(string $service): void
     {
         $this->ocrService = $service;
 
@@ -120,9 +117,10 @@ class IdentityDocument
         }
     }
 
-    public function setFaceDetectionService(string $service)
+    public function setFaceDetectionService(string $service): void
     {
         $this->faceDetectionService = $service;
+
         foreach ($this->images as $image) {
             $image->setFaceDetectionService($service);
         }
@@ -143,22 +141,6 @@ class IdentityDocument
         return true;
     }
 
-    private function mrz(): string
-    {
-        $this->mrz = '';
-
-        foreach ($this->images as $image) {
-            $this->text .= $image->ocr();
-            if ($mrz = $this->searcher->search($image->text)) {
-                $this->mrz = $mrz;
-            }
-        }
-
-        $this->type = $this->searcher->type;
-
-        return $this->mrz;
-    }
-
     private function viz(): ?array
     {
         if (! $this->text) {
@@ -170,18 +152,29 @@ class IdentityDocument
 
     public function getViz(): array
     {
-        if (! isset($this->viz)) {
-            return $this->viz();
+        if (isset($this->viz)) {
+            return $this->viz;
         }
 
-        return $this->viz;
+        return $this->viz();
     }
 
     public function getMrz(): string
     {
-        if (! isset($this->mrz)) {
-            return $this->mrz();
+        if (isset($this->mrz)) {
+            return $this->mrz;
         }
+
+        $this->mrz = '';
+
+        foreach ($this->images as $image) {
+            $this->text .= $image->ocr();
+            if ($mrz = $this->searcher->search($image->text)) {
+                $this->mrz = $mrz;
+            }
+        }
+
+        $this->parser = $this->searcher->type->parser();
 
         return $this->mrz;
     }
@@ -211,22 +204,21 @@ class IdentityDocument
 
     public function getParsedMrz(): array
     {
-        if (! isset($this->parsedMrz) || ! $this->mrz) {
-            return $this->parseMrz();
+        if (isset($this->parsedMrz)) {
+            return $this->parsedMrz;
         }
 
-        return $this->parsedMrz;
+        $mrz = $this->getMrz();
+
+        return $this->parsedMrz = $this->parser->parse($mrz);
     }
 
-    public function setMrz($mrz): IdentityDocument
+    public function setMrz($text): IdentityDocument
     {
-        $this->mrz = $mrz;
+        if ($mrz = $this->searcher->search($text)) {
+            $this->mrz = $mrz;
+        }
 
         return $this;
-    }
-
-    private function parseMrz(): array
-    {
-        return $this->parsedMrz = $this->parser->parse($this->getMrz(), $this->type);
     }
 }

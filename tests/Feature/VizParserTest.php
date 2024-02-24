@@ -23,9 +23,9 @@ class VizParserTest extends TestCase
             'date_of_birth' => '650310',
             'sex' => 'F',
             'expiration_date' => '240115',
-            'personal_number' => '999999990<<<<<',
+            'personal_number' => '999999990',
             'optional_data_row_1' => null,
-            'optional_data_row_2' => null,
+            'optional_data_row_2' => '999999990<<<<<',
             'last_name' => 'DE<BRUIJN',
             'first_name' => [
                 0 => 'WILLEKE',

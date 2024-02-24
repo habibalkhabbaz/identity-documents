@@ -2,14 +2,14 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Mrz;
 
-use HabibAlkhabbaz\IdentityDocuments\Helpers\IdCheck;
+use HabibAlkhabbaz\IdentityDocuments\Helpers\HashCheck;
 
 class MrzSearcher extends Mrz
 {
     public function search(string $string): ?string
     {
         [$strippedString, $characters] = $this->stripString($string);
-        $keysPositions = $this->findKeysInCharacters($this->keys, $characters);
+        $keysPositions = $this->findPositionsInCharacters($characters);
         $startPosition = $this->findMrzStartPosition($keysPositions, $characters);
 
         if ($startPosition === null) {
@@ -19,16 +19,16 @@ class MrzSearcher extends Mrz
         return $this->getMrz($strippedString, $startPosition);
     }
 
-    private function getMrz($strippedString, $startPosition)
+    private function getMrz($strippedString, $startPosition): string
     {
-        return substr($strippedString, $startPosition, $this->{$this->type}['length']);
+        return substr($strippedString, $startPosition, $this->type->length());
     }
 
-    private function findKeysInCharacters(array $keys, array $characters): array
+    private function findPositionsInCharacters(array $characters): array
     {
         $positions = [];
 
-        foreach ($keys as $key => $value) {
+        foreach (array_keys($this->typesByKeys) as $key) {
             $positions[$key] = array_keys($characters, $key, true);
         }
 
@@ -37,18 +37,18 @@ class MrzSearcher extends Mrz
 
     private function buildCheckString(array $checkOver, int $position, array $characters, bool $convert = false): string
     {
-        $checkStringArray = [];
+        $checkPositions = [];
 
         foreach ($checkOver as $check) {
             $start = $position + $check[0];
             $end = $start + $check[1] - 1;
-            $checkStringArray = array_merge($checkStringArray, range($start, $end));
+            $checkPositions = array_merge($checkPositions, range($start, $end));
         }
 
         $checkString = '';
 
-        foreach ($checkStringArray as $character) {
-            $checkString .= ($characters[$character] === 'O' && $convert) ? '0' : $characters[$character];
+        foreach ($checkPositions as $checkPosition) {
+            $checkString .= ($characters[$checkPosition] === 'O' && $convert) ? '0' : $characters[$checkPosition];
         }
 
         return $checkString;
@@ -56,20 +56,20 @@ class MrzSearcher extends Mrz
 
     private function checkPositionInFormat(int $position, array $characters, array $checkDigits): bool
     {
-        foreach ($checkDigits as $checkDigitIndex => $checkOver) {
-            $checkDigitPosition = $position + $checkDigitIndex;
+        foreach ($checkDigits as $hashIndex => $checkOver) {
+            $hashPosition = $position + $hashIndex;
 
-            if (! isset($characters[$checkDigitPosition])) {
+            if (! isset($characters[$hashPosition])) {
                 return false;
             }
 
-            $checkDigit = ($characters[$checkDigitPosition] === 'O') ? '0' : $characters[$checkDigitPosition];
+            $hash = ($characters[$hashPosition] === 'O') ? '0' : $characters[$hashPosition];
 
             $checkString = $this->buildCheckString($checkOver, $position, $characters);
 
-            if (! IdCheck::checkDigit($checkString, $checkDigit)) {
+            if (! HashCheck::isValid($checkString, $hash)) {
                 $checkString = $this->buildCheckString($checkOver, $position, $characters, true);
-                if (! IdCheck::checkDigit($checkString, $checkDigit)) {
+                if (! HashCheck::isValid($checkString, $hash)) {
                     return false;
                 }
             }
@@ -78,10 +78,10 @@ class MrzSearcher extends Mrz
         return true;
     }
 
-    private function testPositions(array $template, array $positions, $characters): ?int
+    private function testPositions(array $checks, array $positions, $characters): ?int
     {
         foreach ($positions as $position) {
-            if ($this->checkPositionInFormat($position, $characters, $template)) {
+            if ($this->checkPositionInFormat($position, $characters, $checks)) {
                 return $position;
             }
         }
@@ -91,10 +91,12 @@ class MrzSearcher extends Mrz
 
     private function testKeyTemplates(string $key, array $positions, array $characters): ?int
     {
-        foreach ($this->keys[$key] as $name => $template) {
-            $position = $this->testPositions($template, $positions, $characters);
+        $types = $this->typesByKeys[$key];
+
+        foreach ($types as $type) {
+            $position = $this->testPositions($type->checks(), $positions, $characters);
             if ($position !== null) {
-                $this->type = $name;
+                $this->type = $type;
 
                 return $position;
             }
@@ -103,9 +105,9 @@ class MrzSearcher extends Mrz
         return null;
     }
 
-    private function findMrzStartPosition(array $mrzKeys, array $characters): ?int
+    private function findMrzStartPosition(array $keysPositions, array $characters): ?int
     {
-        foreach ($mrzKeys as $key => $positions) {
+        foreach ($keysPositions as $key => $positions) {
             $position = $this->testKeyTemplates($key, $positions, $characters);
             if ($position !== null) {
                 return $position;

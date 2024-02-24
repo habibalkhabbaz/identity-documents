@@ -2,13 +2,11 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Helpers;
 
-class IdCheck
+class HashCheck
 {
-    public static function checkDigit(string $subject, string $check): bool
+    public static function isValid(string $subject, string $hash): bool
     {
-        if (is_numeric($check)) {
-            $check = intval($check);
-        } elseif ($check === '<') {
+        if ($hash === '<') {
             return true;
         }
 
@@ -17,25 +15,19 @@ class IdCheck
         $total = 0;
 
         foreach ($characters as $key => $character) {
-            $weight = $key;
-
-            while ($weight > 2) {
-                $weight -= 3;
-            }
-
             $value = self::toInt($character);
 
             if (is_null($value)) {
                 return false;
             }
 
-            $value = $value * $pattern[$weight];
+            $value = $value * $pattern[$key % 3];
             $total += $value;
         }
 
         $remainder = $total % 10;
 
-        return $remainder === $check;
+        return $remainder === (int) $hash;
     }
 
     private static function toInt(string $character): ?int

@@ -38,7 +38,7 @@ class VizParser extends Viz
                 $lastName = [];
                 foreach ($fillerAmount as $count) {
                     if (isset($words[$wordKey + $count])) {
-                        array_push($lastName, $words[$wordKey + $count]);
+                        $lastName[] = $words[$wordKey + $count];
                     }
                 }
                 foreach ($lastName as $name) {
@@ -55,7 +55,7 @@ class VizParser extends Viz
                 $this->viz['last_name']['confidence'] = $lastNameScore;
             }
 
-            if (strpos($word, preg_replace('/</', '', $parsed['document_number'])) !== false) {
+            if (str_contains($word, preg_replace('/</', '', $parsed['document_number']))) {
                 $this->viz['document_number']['value'] = $word;
             }
 
@@ -81,7 +81,7 @@ class VizParser extends Viz
         return $this->viz;
     }
 
-    private function compare(string $mrz, string $viz)
+    private function compare(string $mrz, string $viz): float|int
     {
         $viz = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $viz);
         $viz = preg_replace('/([ ]|[-])/', '<', $viz);

@@ -2,10 +2,10 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Interfaces;
 
-use Intervention\Image\Image;
 use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
+use Intervention\Image\Interfaces\ImageInterface;
 
 interface Ocr
 {
-    public function ocr(Image $image): OcrResponse;
+    public function ocr(ImageInterface $image): OcrResponse;
 }

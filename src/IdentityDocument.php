@@ -6,8 +6,8 @@ use HabibAlkhabbaz\IdentityDocuments\Mrz\Contracts\MrzParser;
 use HabibAlkhabbaz\IdentityDocuments\Mrz\MrzSearcher;
 use HabibAlkhabbaz\IdentityDocuments\Services\Google;
 use HabibAlkhabbaz\IdentityDocuments\Viz\VizParser;
-use Intervention\Image\Facades\Image as Img;
-use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class IdentityDocument
 {
@@ -15,7 +15,7 @@ class IdentityDocument
 
     public array $viz;
 
-    public ?Image $face;
+    public ?ImageInterface $face;
 
     public array $parsedMrz;
 
@@ -51,8 +51,8 @@ class IdentityDocument
             $this->addBackImage($backImage);
         }
 
-        $this->searcher = new MrzSearcher();
-        $this->resolver = new VizParser();
+        $this->searcher = new MrzSearcher;
+        $this->resolver = new VizParser;
     }
 
     public static function all($frontImage = null, $backImage = null): array
@@ -68,13 +68,7 @@ class IdentityDocument
         $face = $id->getFace();
 
         $faceB64 = ($face) ?
-            'data:image/jpg;base64,'.
-            base64_encode(
-                $face
-                    ->resize(null, 200, fn ($constraint) => $constraint->aspectRatio())
-                    ->encode()
-                    ->encoded
-            ) :
+            'data:image/jpg;base64,'.base64_encode($face->scale(null, 200)->encode()) :
             null;
         $viz = $id->getViz();
 
@@ -105,7 +99,7 @@ class IdentityDocument
 
     private function createImage($file): IdentityImage
     {
-        return new IdentityImage(Img::make($file), $this->ocrService, $this->faceDetectionService);
+        return new IdentityImage(ImageManager::gd()->read($file), $this->ocrService, $this->faceDetectionService);
     }
 
     public function setOcrService(string $service): void
@@ -179,7 +173,7 @@ class IdentityDocument
         return $this->mrz;
     }
 
-    public function getFace(): ?Image
+    public function getFace(): ?ImageInterface
     {
         if (! isset($this->face) || ! $this->face) {
             return $this->face();
@@ -188,7 +182,7 @@ class IdentityDocument
         return $this->face;
     }
 
-    private function face(): ?Image
+    private function face(): ?ImageInterface
     {
         $this->face = null;
 

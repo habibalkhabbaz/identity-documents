@@ -2,21 +2,21 @@
 
 namespace HabibAlkhabbaz\IdentityDocuments\Filters;
 
-use Intervention\Image\Facades\Image as Img;
-use Intervention\Image\Filters\FilterInterface;
-use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Interfaces\ModifierInterface;
 
-class MergeFilter implements FilterInterface
+class MergeFilter implements ModifierInterface
 {
     /**
      * Size of filter effects.
      */
-    private Image $addImg;
+    private ImageInterface $addImg;
 
     /**
      * Creates new instance of filter.
      */
-    public function __construct(Image $image)
+    public function __construct(ImageInterface $image)
     {
         $this->addImg = $image;
     }
@@ -24,7 +24,7 @@ class MergeFilter implements FilterInterface
     /**
      * Applies filter effects to given image.
      */
-    public function applyFilter(Image $image): Image
+    public function apply(ImageInterface $image): ImageInterface
     {
         $baseImgX = $image->width();
         $baseImgY = $image->height();
@@ -35,9 +35,9 @@ class MergeFilter implements FilterInterface
         $canvasY = $baseImgY + $addImgY;
         $canvasX = ($baseImgX > $addImgX) ? $baseImgX : $addImgX;
 
-        $canvas = Img::canvas($canvasX, $canvasY, '#ffffff');
-        $canvas->insert($image);
-        $canvas->insert($this->addImg, 'top-left', 0, $baseImgY);
+        $canvas = ImageManager::gd()->create($canvasX, $canvasY);
+        $canvas->place($image);
+        $canvas->place($this->addImg, 'top-left', 0, $baseImgY);
 
         return $canvas;
     }

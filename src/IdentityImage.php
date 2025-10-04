@@ -7,24 +7,24 @@ use HabibAlkhabbaz\IdentityDocuments\Exceptions\CouldNotSetService;
 use HabibAlkhabbaz\IdentityDocuments\Filters\MergeFilter;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
-use Intervention\Image\Image;
+use Intervention\Image\Interfaces\ImageInterface;
 use ReflectionClass;
 
 class IdentityImage
 {
-    public Image $image;
+    public ImageInterface $image;
 
     public Exception $error;
 
     public string $text;
 
-    public ?Image $face;
+    public ?ImageInterface $face;
 
     private string $ocrService;
 
     private string $faceDetectionService;
 
-    public function __construct(Image $image, $ocrService, $faceDetectionService)
+    public function __construct(ImageInterface $image, $ocrService, $faceDetectionService)
     {
         $this->setOcrService($ocrService);
         $this->setFaceDetectionService($faceDetectionService);
@@ -51,7 +51,7 @@ class IdentityImage
         $this->faceDetectionService = $service;
     }
 
-    public function setImage(Image $image)
+    public function setImage(ImageInterface $image)
     {
         $this->image = $image;
     }
@@ -64,15 +64,15 @@ class IdentityImage
     public function ocr(): string
     {
         /** @var Ocr $service */
-        $service = new $this->ocrService();
+        $service = new $this->ocrService;
 
         return $this->text = $service->ocr($this->image)->text;
     }
 
-    public function face(): ?Image
+    public function face(): ?ImageInterface
     {
         /** @var FaceDetection $service */
-        $service = new $this->faceDetectionService();
+        $service = new $this->faceDetectionService;
 
         return $this->face = $service->detect($this);
     }

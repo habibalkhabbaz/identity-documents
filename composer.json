@@ -2,7 +2,7 @@
   "name": "habibalkhabbaz/identity-documents",
   "description": "Package to parse identity documents like passports",
   "license": "GPL-3.0-or-later",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "authors": [
     {
       "name": "Hergen Dillema",
@@ -19,7 +19,7 @@
   ],
   "require": {
     "google/cloud-vision": "^1.9",
-    "intervention/image": "^2.5",
+    "intervention/image": "^3.0",
     "illuminate/support": "^10.0||^11.0||^12.0"
   },
   "require-dev": {

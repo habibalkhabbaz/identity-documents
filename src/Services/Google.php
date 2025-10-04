@@ -7,7 +7,7 @@ use HabibAlkhabbaz\IdentityDocuments\IdentityImage;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\FaceDetection;
 use HabibAlkhabbaz\IdentityDocuments\Interfaces\Ocr;
 use HabibAlkhabbaz\IdentityDocuments\Responses\OcrResponse;
-use Intervention\Image\Image;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class Google implements FaceDetection, Ocr
 {
@@ -21,7 +21,7 @@ class Google implements FaceDetection, Ocr
         $this->annotator = new ImageAnnotatorClient(['credentials' => $this->credentials]);
     }
 
-    public function ocr(Image $image): OcrResponse
+    public function ocr(ImageInterface $image): OcrResponse
     {
         $response = $this->annotator->textDetection((string) $image->encode());
         $text = $response->getTextAnnotations();
@@ -29,7 +29,7 @@ class Google implements FaceDetection, Ocr
         return new OcrResponse($text[0]->getDescription());
     }
 
-    public function detect(IdentityImage $image): ?Image
+    public function detect(IdentityImage $image): ?ImageInterface
     {
         $response = $this->annotator->faceDetection((string) $image->image->encode());
 

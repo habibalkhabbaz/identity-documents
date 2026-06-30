@@ -19,7 +19,7 @@ class MrzSearcher extends Mrz
         return $this->getMrz($strippedString, $startPosition);
     }
 
-    private function getMrz($strippedString, $startPosition): string
+    private function getMrz(string $strippedString, int $startPosition): string
     {
         return substr($strippedString, $startPosition, $this->type->length());
     }
@@ -78,7 +78,7 @@ class MrzSearcher extends Mrz
         return true;
     }
 
-    private function testPositions(array $checks, array $positions, $characters): ?int
+    private function testPositions(array $checks, array $positions, array $characters): ?int
     {
         foreach ($positions as $position) {
             if ($this->checkPositionInFormat($position, $characters, $checks)) {
@@ -119,9 +119,8 @@ class MrzSearcher extends Mrz
 
     private function stripString(string $string): array
     {
-        $strippedString = preg_replace('/\r\n|\r|\n/', '', $string);
-        $strippedString = preg_replace('/\s+/', '', $strippedString);
-        $strippedString = (is_string($strippedString)) ? $strippedString : $string;
+        // Remove all whitespace (newlines, tabs, spaces) in a single pass.
+        $strippedString = preg_replace('/\s+/', '', $string) ?? $string;
         $characters = str_split($strippedString);
 
         return [$strippedString, $characters];
